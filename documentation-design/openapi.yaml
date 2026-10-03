@@ -1,0 +1,648 @@
+openapi: 3.0.3
+
+info:
+  title: Sistem Klasterisasi Hafalan Santri API
+  description: |
+    REST API untuk mengelola data santri,
+    data hafalan, evaluasi hafalan,
+    dan proses klasterisasi kemampuan hafalan santri.
+  version: 1.0.0
+
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local Development Server
+
+
+tags:
+
+  - name: Santri
+    description: Pengelolaan data santri
+
+  - name: Hafalan
+    description: Pengelolaan data hafalan
+
+  - name: Evaluasi
+    description: Pengelolaan evaluasi hafalan
+
+  - name: Clustering
+    description: Proses pengelompokan kemampuan hafalan
+
+
+paths:
+
+
+  /santri:
+
+
+    get:
+
+      tags:
+        - Santri
+
+      summary: Mendapatkan seluruh data santri
+
+      description:
+        Mengambil daftar seluruh santri yang terdaftar pada sistem.
+
+      responses:
+
+        "200":
+
+          description: Data santri berhasil ditemukan
+
+          content:
+
+            application/json:
+
+              schema:
+
+                type: array
+
+                items:
+
+                  $ref: "#/components/schemas/Santri"
+
+
+
+    post:
+
+      tags:
+        - Santri
+
+      summary: Menambahkan data santri baru
+
+      requestBody:
+
+        required: true
+
+        content:
+
+          application/json:
+
+            schema:
+
+              $ref: "#/components/schemas/SantriCreate"
+
+
+      responses:
+
+        "201":
+
+          description: Data santri berhasil ditambahkan
+
+
+
+  /santri/{id_santri}:
+
+
+    get:
+
+      tags:
+        - Santri
+
+      summary: Mendapatkan detail santri berdasarkan ID
+
+
+      parameters:
+
+        - name: id_santri
+
+          in: path
+
+          required: true
+
+          schema:
+
+            type: integer
+
+
+
+      responses:
+
+        "200":
+
+          description: Detail data santri berhasil ditemukan
+
+
+        "404":
+
+          description: Data santri tidak ditemukan
+
+
+
+
+
+  /hafalan:
+
+
+    post:
+
+      tags:
+
+        - Hafalan
+
+
+      summary: Menambahkan data hafalan santri
+
+
+      requestBody:
+
+        required: true
+
+        content:
+
+          application/json:
+
+            schema:
+
+              $ref: "#/components/schemas/HafalanCreate"
+
+
+
+      responses:
+
+        "201":
+
+          description: Data hafalan berhasil ditambahkan
+
+
+
+
+  /hafalan/{id_santri}:
+
+
+    get:
+
+      tags:
+
+        - Hafalan
+
+
+      summary: Mendapatkan riwayat hafalan berdasarkan santri
+
+
+      parameters:
+
+        - name: id_santri
+
+          in: path
+
+          required: true
+
+          schema:
+
+            type: integer
+
+
+
+      responses:
+
+
+        "200":
+
+          description: Data hafalan berhasil ditemukan
+
+
+
+
+
+  /evaluasi:
+
+
+    post:
+
+      tags:
+
+        - Evaluasi
+
+
+      summary: Menambahkan hasil evaluasi hafalan
+
+
+      requestBody:
+
+        required: true
+
+        content:
+
+          application/json:
+
+            schema:
+
+              $ref: "#/components/schemas/EvaluasiCreate"
+
+
+
+      responses:
+
+
+        "201":
+
+          description: Data evaluasi berhasil ditambahkan
+
+
+
+
+
+  /clustering:
+
+
+    post:
+
+      tags:
+
+        - Clustering
+
+
+      summary: Melakukan proses klasterisasi hafalan santri
+
+
+      requestBody:
+
+        required: true
+
+        content:
+
+          application/json:
+
+            schema:
+
+              $ref: "#/components/schemas/ClusterRequest"
+
+
+
+      responses:
+
+
+        "200":
+
+          description: Proses clustering berhasil
+
+
+          content:
+
+
+            application/json:
+
+
+              schema:
+
+
+                type: array
+
+
+                items:
+
+
+                  $ref: "#/components/schemas/ClusterResponse"
+
+
+
+
+
+components:
+
+
+  schemas:
+
+
+
+    Santri:
+
+
+      type: object
+
+
+      properties:
+
+
+        id_santri:
+
+          type: integer
+
+
+        nis:
+
+          type: string
+
+
+        nama:
+
+          type: string
+
+
+        kelas:
+
+          type: string
+
+
+        jenis_kelamin:
+
+          type: string
+
+
+        tanggal_lahir:
+
+          type: string
+
+          format: date
+
+
+        alamat:
+
+          type: string
+
+
+
+
+
+    SantriCreate:
+
+
+      type: object
+
+
+      required:
+
+
+        - nis
+
+        - nama
+
+        - kelas
+
+
+      properties:
+
+
+        nis:
+
+          type: string
+
+
+        nama:
+
+          type: string
+
+
+        kelas:
+
+          type: string
+
+
+        jenis_kelamin:
+
+          type: string
+
+
+        tanggal_lahir:
+
+          type: string
+
+          format: date
+
+
+        alamat:
+
+          type: string
+
+
+
+
+
+    Hafalan:
+
+
+      type: object
+
+
+      properties:
+
+
+        id_hafalan:
+
+          type: integer
+
+
+        id_santri:
+
+          type: integer
+
+
+        juz:
+
+          type: integer
+
+
+        surat:
+
+          type: string
+
+
+        ayat_mulai:
+
+          type: integer
+
+
+        ayat_selesai:
+
+          type: integer
+
+
+        jumlah_ayat:
+
+          type: integer
+
+
+        tanggal_setoran:
+
+          type: string
+
+          format: date
+
+
+        nilai_hafalan:
+
+          type: number
+
+
+        kualitas_bacaan:
+
+          type: number
+
+
+
+
+
+    HafalanCreate:
+
+
+      type: object
+
+
+      required:
+
+
+        - id_santri
+
+        - juz
+
+        - surat
+
+
+      properties:
+
+
+        id_santri:
+
+          type: integer
+
+
+        juz:
+
+          type: integer
+
+
+        surat:
+
+          type: string
+
+
+        ayat_mulai:
+
+          type: integer
+
+
+        ayat_selesai:
+
+          type: integer
+
+
+        jumlah_ayat:
+
+          type: integer
+
+
+        tanggal_setoran:
+
+          type: string
+
+          format: date
+
+
+        nilai_hafalan:
+
+          type: number
+
+
+        kualitas_bacaan:
+
+          type: number
+
+
+
+
+
+    EvaluasiCreate:
+
+
+      type: object
+
+
+      properties:
+
+
+        id_hafalan:
+
+          type: integer
+
+
+        kelancaran:
+
+          type: number
+
+
+        tajwid:
+
+          type: number
+
+
+        makhraj:
+
+          type: number
+
+
+        catatan:
+
+          type: string
+
+
+        tanggal_eval:
+
+          type: string
+
+          format: date
+
+
+
+
+
+    ClusterRequest:
+
+
+      type: object
+
+
+      properties:
+
+
+        jumlah_cluster:
+
+
+          type: integer
+
+
+          example: 3
+
+
+
+
+
+    ClusterResponse:
+
+
+      type: object
+
+
+      properties:
+
+
+        id_santri:
+
+          type: integer
+
+
+        cluster_id:
+
+          type: integer
+
+
+        nama_cluster:
+
+          type: string
+
+
+          example: Tinggi
+
+
+        nilai_akhir:
+
+          type: number
+
+
+        tanggal_proses:
+
+          type: string
+
+          format: date
