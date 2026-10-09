@@ -1,0 +1,10 @@
+
+{
+"name":"PTM06 API Collection",
+"items":[
+"/auth/login",
+"/santri",
+"/hafalan",
+"/clustering/predict"
+]
+}
